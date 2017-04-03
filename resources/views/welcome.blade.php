@@ -1,95 +1,67 @@
-<!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html> <html ng-app="commentApp" lang="en"> <head> <meta charset="UTF-8"> <title>Laravel and Angular Comment System</title>
 
-        <title>Laravel</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"> <!-- load bootstrap via cdn -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        body        { padding-top:30px; }
+        form        { padding-bottom:20px; }
+        .comment    { padding-bottom:20px; }
+    </style>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+    <!-- JS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
+    <!-- ANGULAR -->
+    <!-- all angular resources will be loaded from the /public folder -->
+    <script src="<?= asset('js/controllers/mainCtrl.js') ?>"></script> <!-- load our controller -->
+    <script src="<?= asset('js/services/commentService.js') ?>"></script> <!-- load our service -->
+    <script src="<?= asset('js/app.js') ?>"></script> <!-- load our application -->
 
-            .full-height {
-                height: 100vh;
-            }
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+</head>
+<!-- declare our angular app and controller -->
+<body class="container" ng-controller="mainController"> <div class="col-md-8 col-md-offset-2">
 
-            .position-ref {
-                position: relative;
-            }
+    <!-- PAGE TITLE =============================================== -->
+    <div class="page-header">
+        <h2>Laravel and Angular Single Page Application</h2>
+        <h4>Commenting System</h4>
+    </div>
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+    <!-- NEW COMMENT FORM =============================================== -->
+    <form ng-submit="submitComment()"> <!-- ng-submit will disable the default form action and use our function -->
 
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
+        <!-- AUTHOR -->
+        <div class="form-group">
+            <input type="text" class="form-control input-sm" name="author" ng-model="commentData.author" placeholder="Name">
         </div>
-    </body>
+
+        <!-- COMMENT TEXT -->
+        <div class="form-group">
+            <input type="text" class="form-control input-lg" name="comment" ng-model="commentData.text" placeholder="Say what you have to say">
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <div class="form-group text-right">
+            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        </div>
+    </form>
+
+    <!-- LOADING ICON =============================================== -->
+    <!-- show loading icon if the loading variable is set to true -->
+    <p class="text-center" ng-show="loading"><span class="fa fa-meh-o fa-5x fa-spin"></span></p>
+
+    <!-- THE COMMENTS =============================================== -->
+    <!-- hide these comments if the loading variable is true -->
+    <div class="comment" ng-hide="loading" ng-repeat="comment in comments">
+        <h3>Comment #@{{ comment.id }} <small>by @{{ comment.author }}</h3>
+        <p>@{{ comment.text }}</p>
+
+        <p><a href="#" ng-click="deleteComment(comment.id)" class="text-muted">Delete</a></p>
+    </div>
+
+</div>
+</body>
 </html>

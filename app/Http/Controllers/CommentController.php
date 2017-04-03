@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Input;
 use App\Comment;
 
 class CommentController extends Controller
@@ -16,7 +14,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return Response::json(Comment::get());
+        return Comment::orderBy('id', 'asc')->get();
     }
 
     /**
@@ -37,12 +35,10 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        Comment::create(array(
-            'author' => Input::get('author'),
-            'text' => Input::get('text')
-        ));
-
-        return Response::json(array('success' => true));
+        $comment = new Comment;
+        $comment->author = $request->input('author');
+        $comment->text = $request->input('text');
+        $comment->save();
     }
 
     /**
@@ -87,7 +83,6 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        Comment::destroy($id);
-        return Response::json(array('success' => true));
+        Comment::find($id)->delete();
     }
 }
